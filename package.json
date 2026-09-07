@@ -1,6 +1,7 @@
 {
   "name": "agent_orchestrator",
   "private": true,
+  "packageManager": "npm@11.19.0",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
@@ -15,12 +16,6 @@
   },
   "engines": {
     "node": ">=24"
-  },
-  "devEngines": {
-    "packageManager": {
-      "name": "npm",
-      "version": "11.3.0"
-    }
   },
   "workspaces": [
     "apps/*",
