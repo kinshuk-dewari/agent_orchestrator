@@ -1,4 +1,5 @@
 import { Sidebar } from "./components/Sidebar";
+import { SearchBox } from "./components/SearchBox";
 
 const recentChats = [
   {
@@ -22,8 +23,25 @@ const recentChats = [
     title: "Build AgentX",
   },
 ];
+
 export default function Home() {
   return (
-    <div className="mx-auto w-full"> <Sidebar recentChats={recentChats} /> </div>
+    <main className="flex min-h-screen w-full bg-white">
+      {/* Sidebar */}
+      <Sidebar recentChats={recentChats} />
+
+      {/* Main content */}
+      <section className="flex min-h-screen flex-1 items-center justify-center px-6">
+        <div className="flex w-full max-w-[770px] flex-col items-center">
+          {/* Heading */}
+          <h1 className="mb-8 text-center text-[24px] font-normal tracking-[-0.02em] text-neutral-900">
+            What&apos;s on your mind today?
+          </h1>
+
+          {/* Search */}
+          <SearchBox />
+        </div>
+      </section>
+    </main>
   );
 }
