@@ -1,5 +1,7 @@
-# MiniManus — Architecture Diagram
+# Architecture Diagram
+![alt text](image.png)
 
+## Detailed flow
 ```text
                          ┌──────────────────────────┐
                          │          USER            │
