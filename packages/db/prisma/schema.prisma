@@ -1,0 +1,255 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+ 
+// Auth.js required models 
+
+model User {
+  id             String    @id @default(cuid())
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  githubUsername String?
+
+  accounts      Account[]
+  sessions      Session[]
+  projects      Project[]
+  tasks         Task[]
+  repositories  Repository[]
+  notifications Notification[]
+
+  createdAt DateTime @default(now())
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  // access_token/refresh_token are what let the GitHub agent commit on the user's behalf later
+  access_token      String? @db.Text
+  refresh_token     String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+ 
+// Task / chat thread models
+// Each sidebar "Recent" item = one Task 
+
+model Project {
+  id        String   @id @default(cuid())
+  name      String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  tasks     Task[]
+  createdAt DateTime @default(now())
+}
+
+model Task {
+  id     String     @id @default(cuid())
+  title  String // auto-generated from first message, shown in sidebar
+  status TaskStatus @default(PENDING)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id])
+
+  repositoryId String?
+  repository   Repository? @relation(fields: [repositoryId], references: [id])
+
+  messages Message[]
+  runs     AgentRun[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Message {
+  id     String      @id @default(cuid())
+  taskId String
+  task   Task        @relation(fields: [taskId], references: [id])
+  role   MessageRole
+  content String      @db.Text
+
+  // which composer toggles were on when this message was sent, e.g. {"webSearch": true, "deepResearch": false}
+  toolFlags Json?
+
+  attachments Attachment[]
+  createdAt   DateTime     @default(now())
+}
+
+model Attachment {
+  id        String   @id @default(cuid())
+  messageId String
+  message   Message  @relation(fields: [messageId], references: [id])
+  fileName  String
+  fileUrl   String
+  mimeType  String
+  createdAt DateTime @default(now())
+}
+
+ 
+// Agent pipeline execution models
+// One Task can have multiple AgentRuns (e.g. user asks for a retry) 
+
+model AgentRun {
+  id     String    @id @default(cuid())
+  taskId String
+  task   Task      @relation(fields: [taskId], references: [id])
+  status RunStatus @default(QUEUED)
+
+  // planner's structured output: ordered list of steps before execution starts
+  plan Json?
+
+  steps           AgentStep[]
+  sandboxSessions SandboxSession[]
+
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+model AgentStep {
+  id         String    @id @default(cuid())
+  agentRunId String
+  agentRun   AgentRun  @relation(fields: [agentRunId], references: [id])
+
+  agentType AgentType // SEARCH | WRITE | REVIEW | GITHUB
+  order     Int
+  status    StepStatus @default(QUEUED)
+
+  input  Json?
+  output Json?
+  error  String?
+
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([agentRunId, order])
+}
+
+model SandboxSession {
+  id         String        @id @default(cuid())
+  agentRunId String
+  agentRun   AgentRun      @relation(fields: [agentRunId], references: [id])
+
+  containerId String?
+  status      SandboxStatus @default(CREATING)
+  logs        String?       @db.Text
+
+  startedAt   DateTime?
+  destroyedAt DateTime?
+  createdAt   DateTime      @default(now())
+}
+ 
+// GitHub integration 
+
+model Repository {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  owner         String
+  name          String
+  defaultBranch String   @default("main")
+  tasks         Task[]
+  createdAt     DateTime @default(now())
+
+  @@unique([owner, name])
+}
+
+
+// Notifications (async "task completed" alerts)
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  taskId    String?
+  title     String
+  body      String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// Enums
+
+enum TaskStatus {
+  PENDING
+  RUNNING
+  NEEDS_APPROVAL
+  COMPLETED
+  FAILED
+}
+
+enum RunStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum StepStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+  RETRYING
+  SKIPPED
+}
+
+enum AgentType {
+  SEARCH
+  WRITE
+  REVIEW
+  GITHUB
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+  TOOL
+}
+
+enum SandboxStatus {
+  CREATING
+  RUNNING
+  STOPPED
+  FAILED
+  DESTROYED
+}

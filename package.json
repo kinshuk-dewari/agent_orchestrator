@@ -20,5 +20,8 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+   "overrides": {
+    "prisma": "6.19.3"
+  }
 }
