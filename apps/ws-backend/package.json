@@ -1,0 +1,22 @@
+{
+  "name": "ws-backend",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun run --watch index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@repo/db": "*"
+  },
+  "peerDependencies": {
+    "typescript": "^7"
+  },
+  "dependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/ws": "^8.18.1",
+    "jsonwebtoken": "^9.0.3",
+    "ws": "^8.21.3"
+  }
+}
