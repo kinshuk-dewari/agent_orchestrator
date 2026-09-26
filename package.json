@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "prettier": "3.9.6",
-    "turbo": "^2.11.4",
+    "turbo": "^2.10.13",
     "typescript": "7.0.2"
   },
   "engines": {
@@ -25,5 +25,11 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/ws": "^8.18.1",
+    "jsonwebtoken": "^9.0.3",
+    "ws": "^8.21.3"
+  }
 }

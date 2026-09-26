@@ -3,8 +3,13 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "dev": "bun run --watch index.ts"
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@repo/db": "*",
+    "@repo/common": "*"
   },
   "peerDependencies": {
     "typescript": "^7"
