@@ -1,4 +1,4 @@
-# AgentX
+# AgentX : Say it once. It's handled.
 a multiagent orchestration harness for your day to day tasks.
 
 ## Tech stack
