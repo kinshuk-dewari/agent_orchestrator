@@ -25,4 +25,5 @@ model User{
 model Task{
   id String @id @default(uuid())
   createdAt DateTime @default(now())
+  
 }

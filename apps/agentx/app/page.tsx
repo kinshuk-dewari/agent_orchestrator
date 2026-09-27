@@ -32,7 +32,7 @@ export default function Home() {
 
       {/* Main content */}
       <section className="flex min-h-screen flex-1 items-center justify-center px-6">
-        <div className="flex w-full max-w-[770px] flex-col items-center">
+        <div className="flex w-full max-w-3xl flex-col items-center">
           {/* Heading */}
           <h1 className="mb-8 text-center text-[24px] font-normal tracking-[-0.02em] text-neutral-900">
             What&apos;s on your mind today?
