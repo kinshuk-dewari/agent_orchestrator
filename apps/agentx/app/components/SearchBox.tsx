@@ -44,9 +44,7 @@ const connectors: Connector[] = [
 
 export function SearchBox() {
   const [showConnectors, setShowConnectors] = useState(false);
-  const [selectedConnectors, setSelectedConnectors] = useState<Connector[]>(
-    []
-  );
+  const [selectedConnectors, setSelectedConnectors] = useState<Connector[]>([]);
   const [query, setQuery] = useState("");
 
   /*   Reference to the entire search component   */
@@ -88,14 +86,12 @@ export function SearchBox() {
   /*    Remove connector   */
   const removeConnector = (id: string) => {
     setSelectedConnectors((current) =>
-      current.filter((item) => item.id !== id)
+      current.filter((item) => item.id !== id),
     );
   };
 
   /*    Automatically grow textarea   */
-  const handleQueryChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
+  const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value;
 
     setQuery(value);
@@ -118,8 +114,7 @@ export function SearchBox() {
     });
   };
 
-  const hasContent =
-    query.trim().length > 0 || selectedConnectors.length > 0;
+  const hasContent = query.trim().length > 0 || selectedConnectors.length > 0;
 
   /*  Change shape depending on connector state  */
   const composerRadius =
@@ -130,22 +125,12 @@ export function SearchBox() {
         : "rounded-full";
 
   return (
- 
-    <div
-      ref={searchBoxRef}
-      className="relative w-full max-w-[770px]"
-    >
+    <div ref={searchBoxRef} className="relative w-full max-w-192.5">
       {/*  SEARCH COMPOSER */}
 
       <div
-        className={`
-          relative overflow-hidden
-          border border-neutral-200
-          bg-white
-          shadow-[0_8px_35px_rgba(0,0,0,0.06)]
-          transition-all duration-200
-          ${composerRadius}
-        `}
+        className={`relative overflow-hidden border border-neutral-200 bg-white 
+          shadow-[0_8px_35px_rgba(0,0,0,0.06)] transition-all duration-200 ${composerRadius} `}
       >
         {/*  SELECTED CONNECTORS */}
 
@@ -157,38 +142,18 @@ export function SearchBox() {
               return (
                 <div
                   key={connector.id}
-                  className="
-                    flex items-center gap-2
-                    rounded-lg
-                    border border-neutral-200
-                    bg-neutral-50
-                    px-3 py-1.5
-                    text-[13px]
-                    text-neutral-700
-                  "
+                  className="flex items-center gap-2 rounded-lg border border-neutral-200 
+                  bg-neutral-50 px-3 py-1.5 text-[13px] text-neutral-700 "
                 >
-                  <Icon
-                    size={15}
-                    stroke={1.8}
-                    className="text-neutral-600"
-                  />
+                  <Icon size={15} stroke={1.8} className="text-neutral-600" />
 
-                  <span className="whitespace-nowrap">
-                    {connector.name}
-                  </span>
+                  <span className="whitespace-nowrap">{connector.name}</span>
 
                   <button
                     type="button"
                     onClick={() => removeConnector(connector.id)}
-                    className="
-                      ml-0.5
-                      flex h-4 w-4
-                      items-center justify-center
-                      rounded-full
-                      text-neutral-400
-                      transition
-                      hover:bg-neutral-200
-                      hover:text-neutral-700
+                    className="ml-0.5 flex h-4 w-4 items-center justify-center rounded-full text-neutral-400 
+                    transition hover:bg-neutral-200 hover:text-neutral-700
                     "
                     aria-label={`Remove ${connector.name}`}
                   >
@@ -202,23 +167,14 @@ export function SearchBox() {
 
         {/*  INPUT ROW */}
 
-        <div className="flex min-h-[72px] items-end gap-2 px-4 pb-3 pt-3">
+        <div className="flex min-h-18 items-end gap-2 px-4 pb-3 pt-3">
           {/* Plus button */}
 
           <button
             type="button"
             onClick={() => setShowConnectors((value) => !value)}
-            className="
-              mb-0.5
-              flex h-9 w-9
-              shrink-0
-              items-center justify-center
-              rounded-full
-              text-neutral-600
-              transition
-              hover:bg-neutral-100
-              hover:text-neutral-900
-            "
+            className="mb-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full 
+            text-neutral-600 transition hover:bg-neutral-100 hover:text-neutral-900 "
             aria-label="Add connector"
             aria-expanded={showConnectors}
           >
@@ -239,22 +195,8 @@ export function SearchBox() {
             }}
             placeholder="Ask what you want..."
             rows={1}
-            className="
-              max-h-[180px]
-              min-h-[38px]
-              flex-1
-              resize-none
-              overflow-y-auto
-              border-0
-              bg-transparent
-              px-1
-              py-2
-              text-[15px]
-              leading-6
-              text-neutral-900
-              outline-none
-              placeholder:text-neutral-400
-            "
+            className="max-h-45 min-h-9.5 flex-1 resize-none overflow-y-auto border-0 bg-transparent 
+            px-1 py-2 text-[15px] leading-6 text-neutral-900 outline-none placeholder:text-neutral-400 "
           />
 
           {/* Send button */}
@@ -263,27 +205,12 @@ export function SearchBox() {
             type="button"
             onClick={handleSubmit}
             disabled={!hasContent}
-            className="
-              mb-0.5
-              flex h-9 w-9
-              shrink-0
-              items-center justify-center
-              rounded-full
-              bg-blue-500
-              text-white
-              shadow-sm
-              transition
-              hover:bg-blue-600
-              disabled:cursor-not-allowed
-              disabled:bg-neutral-200
-              disabled:text-neutral-400
-            "
+            className="mb-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-500
+            text-white shadow-sm transition hover:bg-blue-600 disabled:cursor-not-allowed 
+            disabled:bg-neutral-200 disabled:text-neutral-400 "
             aria-label="Send"
           >
-            <IconArrowNarrowRight
-              size={21}
-              stroke={2}
-            />
+            <IconArrowNarrowRight size={21} stroke={2} />
           </button>
         </div>
       </div>
@@ -292,26 +219,14 @@ export function SearchBox() {
 
       {showConnectors && (
         <div
-          className="
-            absolute
-            left-0
-            right-0
-            top-full
-            z-50
-            mt-2
-            overflow-hidden
-            rounded-[20px]
-            border border-neutral-200
-            bg-white
-            p-2
-            shadow-[0_12px_40px_rgba(0,0,0,0.10)]
-          "
+          className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-[20px] 
+        border border-neutral-200 bg-white p-2 shadow-[0_12px_40px_rgba(0,0,0,0.10)]"
         >
           {connectors.map((connector) => {
             const Icon = connector.icon;
 
             const selected = selectedConnectors.some(
-              (item) => item.id === connector.id
+              (item) => item.id === connector.id,
             );
 
             return (
@@ -319,28 +234,13 @@ export function SearchBox() {
                 key={connector.id}
                 type="button"
                 onClick={() => toggleConnector(connector)}
-                className="
-                  group
-                  flex w-full
-                  items-center
-                  gap-3
-                  rounded-xl
-                  px-3
-                  py-2.5
-                  text-left
-                  transition
-                  hover:bg-neutral-50
-                "
+                className=" group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left 
+                transition hover:bg-neutral-50"
               >
                 {/* Icon */}
 
                 <div
-                  className={`
-                    flex h-8 w-8
-                    shrink-0
-                    items-center justify-center
-                    rounded-lg
-                    transition
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition
                     ${
                       selected
                         ? "bg-blue-50 text-blue-500"
@@ -367,16 +267,8 @@ export function SearchBox() {
 
                 {selected && (
                   <div
-                    className="
-                      flex h-5 w-5
-                      shrink-0
-                      items-center justify-center
-                      rounded-full
-                      bg-blue-500
-                      text-[11px]
-                      font-medium
-                      text-white
-                    "
+                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full 
+                    bg-blue-500 text-[11px] font-medium text-white"
                   >
                     ✓
                   </div>
